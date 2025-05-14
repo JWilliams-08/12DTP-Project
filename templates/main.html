@@ -4,5 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Find A Fill In</title>
+    <h1>Hello, World!</h1>
+    <form>
+    <label for="name">Date:</label><br>
+    <select id="date" name="date">
+        {% for date in dates %}
+            <option value="{{ date }}">{{ date }}</option>
+        {% endfor %}
+    </form>
     <link rel="stylesheet" href="styles.css">
 </html>
