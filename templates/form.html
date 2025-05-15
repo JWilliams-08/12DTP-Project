@@ -1,7 +1,5 @@
-<form>
-    <label for="name">Date:</label><br>
-    <select id="date" name="date">
-        {% for date in dates %}
-            <option value="{{ date }}">{{ date }}</option>
-        {% endfor %}
-</form>
+<label for="name">Date:</label><br>
+<select id="date" name="date">
+    {% for date in dates %}
+        <option value="{{ date[0] }}">{{ date[0] }}</option>
+    {% endfor %}

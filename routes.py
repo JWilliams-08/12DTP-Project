@@ -11,11 +11,11 @@ def home():
     # Connect to the SQLite database
     conn = sqlite3.connect('fill-ins.db')
     cursor = conn.cursor()
-    cursor.execute('SELECT date FROM Draw')
+    cursor.execute('SELECT DISTINCT date FROM Draw')
     dates = cursor.fetchall()
     # Close the connection
     conn.close()
-    return render_template('main.html', title='HOME', dates=dates)
+    return render_template('home.html', title='HOME', dates=dates)
 
 
 if __name__ == '__main__':
