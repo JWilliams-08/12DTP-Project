@@ -19,6 +19,16 @@ def home():
     conn.close()
     return render_template('home.html', title='HOME', dates=dates, teams=teams)
 
+@app.route('/get_players/<team_name>')
+def get_players(team_name):
+    conn = get_db_connection()
+    players = conn.execute('''
+        SELECT player.name
+        FROM PlayerTeam
+        WHERE team_name = ?
+    ''', (team_name,)).fetchall()
+    conn.close()
+    return jsonify({'players': [p['name'] for p in players]})
 
 @app.route('/results')
 def results():
