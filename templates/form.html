@@ -1,5 +1,21 @@
-<label for="name">Date:</label><br>
+<label for="date">Date:</label>
 <select id="date" name="date">
     {% for date in dates %}
         <option value="{{ date[0] }}">{{ date[0] }}</option>
     {% endfor %}
+</select>
+<br>
+<label for="team">Team:</label>
+<select id="team" name ="team">
+    {% for team in teams %}
+        <option value="{{ team[0] }}">{{ team[0] }}</option>
+    {% endfor %}
+</select>
+<br>
+<label for="player">Player:</label>
+<select id="player" name="player">
+    <option value="">Select a player</option>
+    {% for player in players %}
+    <option value="{{ player }}">{{ player }}</option>
+    {% endfor %}
+</select>
