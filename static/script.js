@@ -1,6 +1,5 @@
 /* This script gets the players for a selected team when the user selects a team from the dropdown. */
 async function loadPlayers() {
-    console.log('player element at start:', document.getElementById('player'));
     const team = document.getElementById('team').value;
     const playerSelect = document.getElementById('player');
 
