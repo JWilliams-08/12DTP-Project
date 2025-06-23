@@ -23,12 +23,12 @@ def home():
 def get_players(team_name):
     conn = get_db_connection()
     players = conn.execute('''
-        SELECT player.name
+        SELECT player_name
         FROM PlayerTeam
         WHERE team_name = ?
     ''', (team_name,)).fetchall()
     conn.close()
-    return jsonify({'players': [p['name'] for p in players]})
+    return jsonify({'players': [p[0] for p in players]})
 
 @app.route('/results')
 def results():
