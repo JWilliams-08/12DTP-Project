@@ -36,7 +36,9 @@ def get_players(team_name):
 
 
 @app.route('/submit_request', methods=['POST'])
+
 def submit_request():
+    #submit a fill-in request
     date = request.form['date']
     team = request.form['team']
     player = request.form['player']
@@ -49,10 +51,12 @@ def submit_request():
     conn.close()
 
     #redirect user to results page
-    return redirect('/results')
+    return redirect('/results', team=team, date=date, player=player)
 
 @app.route('/results')
 def results():
+    conn = get_db_connection()
+    # get fill-in requests 
 
     return render_template('results.html', title='RESULTS')
 if __name__ == '__main__':
