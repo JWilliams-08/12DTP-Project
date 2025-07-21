@@ -72,7 +72,7 @@ def get_valid_fillins(team, date, player):
     if not valid_team_names:
         conn.close()
         return []
-    print(valid_team_names)
+    return
 
 
 
