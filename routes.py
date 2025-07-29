@@ -16,7 +16,7 @@ def get_db_connection():
 
 def get_valid_fillins(team, date, player):
     #get all valid fill-ins
-    grade_order = [10,12,14,18]
+    GRADE_ORDER = [10,12,14,18]
     conn = get_db_connection()
 
     #get information about the team
@@ -32,11 +32,11 @@ def get_valid_fillins(team, date, player):
 
     #workout the next youngest age grade
     try:
-        target_index = grade_order.index(grade)
+        target_index = GRADE_ORDER.index(grade)
     except ValueError:
         conn.close()
         return []
-    next_younger_grade = grade_order[target_index - 1] if target_index > 0 else None
+    next_younger_grade = GRADE_ORDER[target_index - 1] if target_index > 0 else None
 
     print(next_younger_grade)
     #Query eleible teams:
@@ -64,7 +64,9 @@ def get_valid_fillins(team, date, player):
         if team['day'] != day or team['time'] != time:
             valid_team_names.append(team['name'])
         else:
-            player_count = conn.execute('SELECT COUNT(*) FROM PlayerTeam WHERE team_name = ?', (team['name'],)).fetchone()[0]
+            player_count = conn.execute('''SELECT COUNT(*) 
+                FROM PlayerTeam 
+                WHERE team_name = ?''', (team['name'],)).fetchone()[0]
             if player_count > 4:
                 valid_team_names.append(team['name'])
     
@@ -72,8 +74,22 @@ def get_valid_fillins(team, date, player):
     if not valid_team_names:
         conn.close()
         return []
-    return
+    
+     # get players from valid teams
+    print(valid_team_names)
+    placeholders = ','.join('?' for _ in valid_team_names)  # create ?,?,?... for SQL
+    valid_players = conn.execute(f'''
+        SELECT player_name, team_name
+        FROM PlayerTeam
+        WHERE team_name IN ({placeholders})
+    ''', valid_team_names).fetchall()
 
+    conn.close()
+
+    if not valid_players:
+        return []
+
+    return valid_players
 
 
 @app.route('/')
@@ -117,5 +133,18 @@ def results():
     # get fill-in requests 
 
     return render_template('results.html', date=date, team=team, valid_players=valid_players)
+
+
+@app.errorhandler(404)
+# 404 Not Found
+def not_found_error(error):
+    return render_template('404.html'), 404
+
+
+@app.errorhandler(500)
+# 500 Internal Server Error
+def internal_error(error):
+    return render_template('500.html'), 500
+
 if __name__ == '__main__':
     app.run(debug=True)

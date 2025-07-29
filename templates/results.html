@@ -8,6 +8,18 @@
 </head>
 <body>
     <header></header>
-    <h1>Results</h1>
+    <h1>Avaliable Fill-Ins</h1>
+    <div class="results">
+        {% if valid_players %}
+            <ul>
+                {% for player in valid_players %}
+                    <li>{{ player.player_name }} - {{ player.team_name }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No available fill-ins found for this request.</p>
+        {% endif %}
+
+        <a href="/"><button>Submit another request</button></a>
     </body>
 </html>
