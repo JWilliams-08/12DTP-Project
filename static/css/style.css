@@ -1,4 +1,12 @@
-.form{
-    align-items: center;
-
+.img{
+    width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}
+body {
+    font-family: Arial, sans-serif;
+    background-color: #DBF1FA;
+    margin: 0;
+    padding: 0;
 }
