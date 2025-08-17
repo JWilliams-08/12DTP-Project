@@ -1,14 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Find A Fill In</title>
-    <link rel="stylesheet" href="/static/css/style.css">
-</head>
-<body>
-    <header><img src ="/static/images/Header.png" ></header>
-    <form action="/results" method="POST">{% include 'form.html' %}</form>
+{% extends "layout.html" %}
+{% block content %}
+<header>
+    <img class="header-img" src="/static/images/Header.png"
+        alt="Welcome to Bishopdale Tennis Club Find a Fill In Portal">
+</header>
+
+<main class="main-content">
+    <div class="form-container">
+        <h1>Find a Fill In</h1>
+        <p class="description">Fill out the form below to find available fill-in players for your interclub match.</p>
+    </div>
+
+    <form action="/results" method="POST" class="fill-in-form">
+        <div class="form-group">
+            <label for="date">Match Date:</label>
+            <select id="date" name="date" required>
+                <option value="">Select a date...</option>
+                {% for date in dates %}
+                <option value="{{ date[0] }}">{{ date[0] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="team">Your Team:</label>
+            <select id="team" name="team" onchange="loadPlayers()" required>
+                <option value="">Select your team...</option>
+                {% for team in teams %}
+                <option value="{{ team[0] }}">{{ team[0] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="player">Unavailable Player:</label>
+            <select id="player" name="player" required>
+                <option value="">Select the unavailable player...</option>
+                {% for player in players %}
+                <option value="{{ player[0] }}">{{ player[0] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit">Find a Fill-In</button>
+        </div>
+    </form>
+
     <script src="/static/script.js"></script>
-    </body>
-</html>
+</main>
+{% endblock %}

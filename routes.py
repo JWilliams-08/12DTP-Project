@@ -14,31 +14,31 @@ def get_db_connection():
     return conn
 
 
-def get_valid_fillins(team, date, player):
+def get_valid_fillins(team_name, date, player):
     #get all valid fill-ins
     GRADE_ORDER = [10,12,14,18]
     conn = get_db_connection()
 
     #get information about the team
-    team = conn.execute('SELECT * FROM Team WHERE name = ?', (team,)).fetchone()
+    team = conn.execute('SELECT * FROM Team WHERE name = ?', (team_name,)).fetchone()
     if not team:
         conn.close()
         return []
+    
     grade = int(team['grade'])
     div = int(team['division'])
     day = team['day']
     time = team['time']
-    print(grade, div, day, time)
-
+    
     #workout the next youngest age grade
     try:
         target_index = GRADE_ORDER.index(grade)
     except ValueError:
         conn.close()
         return []
+    
     next_younger_grade = GRADE_ORDER[target_index - 1] if target_index > 0 else None
 
-    print(next_younger_grade)
     #Query eleible teams:
     if next_younger_grade: #if there is a younger age group, query both that and lower divisions of same grade
         eligible_teams = conn.execute('''
@@ -64,9 +64,11 @@ def get_valid_fillins(team, date, player):
         if team['day'] != day or team['time'] != time:
             valid_team_names.append(team['name'])
         else:
-            player_count = conn.execute('''SELECT COUNT(*) 
+            player_count = conn.execute('''
+                SELECT COUNT(*) 
                 FROM PlayerTeam 
-                WHERE team_name = ?''', (team['name'],)).fetchone()[0]
+                WHERE team_name = ?
+                ''', (team['name'],)).fetchone()[0]
             if player_count > 4:
                 valid_team_names.append(team['name'])
     
@@ -75,31 +77,26 @@ def get_valid_fillins(team, date, player):
         conn.close()
         return []
     
-     # get players from valid teams
-    print(valid_team_names)
+    # get players from valid teams
     placeholders = ','.join('?' for _ in valid_team_names)  # create ?,?,?... for SQL
     valid_players = conn.execute(f'''
         SELECT player_name, team_name
         FROM PlayerTeam
         WHERE team_name IN ({placeholders})
     ''', valid_team_names).fetchall()
-
     conn.close()
-
-    if not valid_players:
-        return []
-
     return valid_players
 
 
 @app.route('/')
+#homepage
 def home():
     #Connect to the SQLite database
     conn = get_db_connection()
     dates = conn.execute('SELECT DISTINCT date FROM Draw').fetchall()
     teams = conn.execute('SELECT name FROM Team').fetchall()
     conn.close()
-    return render_template('home.html', title='HOME', dates=dates, teams=teams)
+    return render_template('home.html', title='Home', dates=dates, teams=teams)
 
 
 @app.route('/get_players/<team_name>')
@@ -132,7 +129,7 @@ def results():
     valid_players = get_valid_fillins(team, date, player)
     # get fill-in requests 
 
-    return render_template('results.html', date=date, team=team, valid_players=valid_players)
+    return render_template('results.html', title='Results', date=date, team=team, valid_players=valid_players)
 
 
 @app.errorhandler(404)

@@ -1,12 +1,18 @@
-.img{
-    width: 100%;
+/* Global Styles*/
+
+
+header img{
+    max-width: 100%;
     height: auto;
     display: block;
-    margin: 0 auto;
 }
+header {
+    background-color: #DBF1FA
+}
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #DBF1FA;
+    font-family: 'Open Sans', sans-serif;
+    background-color: #FFFFFF;
     margin: 0;
     padding: 0;
 }
