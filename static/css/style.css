@@ -1,18 +1,22 @@
 /* Global Styles*/
-
-
-header img{
-    max-width: 100%;
-    height: auto;
-    display: block;
-}
-header {
-    background-color: #DBF1FA
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
 body {
-    font-family: 'Open Sans', sans-serif;
-    background-color: #FFFFFF;
-    margin: 0;
-    padding: 0;
+    font-family:'Open Sans', sans-serif;
+    background: #FFFFFF;
+    color: #0b0909;
+    line-height: 1.6;
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas: 
+    "header"
+    "main"
+    "footer";
 }
+
+
