@@ -5,18 +5,29 @@
     <h1>Available Fill-Ins</h1>
 </header>
 
-<div class="results">
-    {% if valid_players %}
-    <ul>
-        {% for player in valid_players %}
-        <li>{{ player.player_name }} - {{ player.team_name }}</li>
-        {% endfor %}
-    </ul>
-    {% else %}
-    <p>No available fill-ins found for this request.</p>
-    {% endif %}
-
-    <a href="/"><button>Submit another request</button></a>
-</div>
+<main>
+    <div class="results">
+        <div class="results-content">
+            {% if valid_players %}
+            <ul>
+                {% for player in valid_players %}
+                <li>
+                    <div class="player-info">
+                        <span class="player-name">{{ player.player_name }}</span>
+                        <span class="team-name">{{ player.team_name }}</span>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p>No available fill-ins found for this request.</p>
+            {% endif %}
+        </div>
+        
+        <div class="results-actions">
+            <a href="/"><button>Submit another request</button></a>
+        </div>
+    </div>
+</main>
 
 {% endblock %}
