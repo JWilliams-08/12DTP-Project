@@ -125,11 +125,19 @@ def results():
     conn.commit()
     conn.close()
 
-    #call function to get valid fill-ins
+    # Get valid fill-ins
     valid_players = get_valid_fillins(team, date, player)
-    # get fill-in requests 
+    
+    # Group players by team
+    teams_dict = {}
+    for player in valid_players:
+        team_name = player['team_name']
+        player_name = player['player_name']
+        if team_name not in teams_dict:
+            teams_dict[team_name] = []
+        teams_dict[team_name].append(player_name)
 
-    return render_template('results.html', title='Results', date=date, team=team, valid_players=valid_players)
+    return render_template('results.html', title='Results', date=date, team=team, teams_dict=teams_dict)
 
 
 @app.errorhandler(404)

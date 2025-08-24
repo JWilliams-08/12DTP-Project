@@ -8,17 +8,19 @@
 <main>
     <div class="results">
         <div class="results-content">
-            {% if valid_players %}
-            <ul>
-                {% for player in valid_players %}
-                <li>
-                    <div class="player-info">
-                        <span class="player-name">{{ player.player_name }}</span>
-                        <span class="team-name">{{ player.team_name }}</span>
-                    </div>
-                </li>
+            {% if teams_dict %}
+                {% for team_name, players in teams_dict.items() %}
+                <div class="team-group">
+                    <h3 class="team-title">{{ team_name }}</h3>
+                    <ul>
+                        {% for player_name in players %}
+                        <li>
+                            <span class="player-name">{{ player_name }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
                 {% endfor %}
-            </ul>
             {% else %}
             <p>No available fill-ins found for this request.</p>
             {% endif %}
