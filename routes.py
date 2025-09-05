@@ -29,6 +29,7 @@ def get_valid_fillins(team_name, date, player):
     div = int(team['division'])
     day = team['day']
     time = team['time']
+    gender = team['gender']
     
     #workout the next youngest age grade
     try:
@@ -43,15 +44,15 @@ def get_valid_fillins(team_name, date, player):
     if next_younger_grade: #if there is a younger age group, query both that and lower divisions of same grade
         eligible_teams = conn.execute('''
             SELECT * FROM Team
-            WHERE (grade = ? AND division < ?)
-            OR (grade = ?)                     
-        ''',(str(grade), (div), str(next_younger_grade))).fetchall() 
+            WHERE (grade = ? AND division < ? AND gender = ?)
+            OR (grade = ? AND gender = ?)
+        ''',(str(grade), (div), gender, str(next_younger_grade), gender)).fetchall() 
 
     else: #if no younger age groups, query lower divisions of same grade
         eligible_teams = conn.execute('''
             SELECT * FROM Team
-            WHERE grade = ? AND division < ?
-        ''', (str(grade), str(div))).fetchall()
+            WHERE grade = ? AND division < ? AND gender = ?
+        ''', (str(grade), str(div), gender)).fetchall()
 
     #check if there are any eligible teams and if not return empty list
     if not eligible_teams:

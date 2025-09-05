@@ -7,8 +7,7 @@ async function loadPlayers() {
         playerSelect.innerHTML = '';
         return;
     }
-
-playerSelect.innerHTML = '<option>Loading...</option>'; 
+    
     playerSelect.innerHTML = '<option>Loading...</option>';
 
     const response = await fetch(`/get_players/${team}`);
