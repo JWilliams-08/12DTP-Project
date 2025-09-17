@@ -210,11 +210,11 @@ button:active {
     gap: 1rem;
 }
 
-.results h2 {
+.results h3 {
     color: #133240;
     font-family: 'Montserrat', sans-serif;
     font-size: clamp(1.5rem, 4vw, 2rem);
-    text-align: center;
+    text-align: left;
 }
 
 .results ul {

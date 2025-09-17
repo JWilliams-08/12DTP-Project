@@ -38,10 +38,10 @@ def get_valid_fillins(team_name, date, player):
         conn.close()
         return []
 
-    next_younger_grade = GRADE_ORDER[target_index - 1] if target_index > 0 else None
+    younger_grade = GRADE_ORDER[target_index - 1] if target_index > 0 else None
 
     # Query eligible teams:
-    if next_younger_grade:
+    if younger_grade:
         # Query both lower divisions and all divisions of next younger grade
         eligible_teams = conn.execute('''
             SELECT * FROM Team
@@ -50,7 +50,7 @@ def get_valid_fillins(team_name, date, player):
         ''', (str(grade),
               (div),
               gender,
-              str(next_younger_grade),
+              str(younger_grade),
               gender)).fetchall()
 
     else:
@@ -146,12 +146,30 @@ def results():
         if team_name not in teams_dict:
             teams_dict[team_name] = []
         teams_dict[team_name].append(player_name)
+    print(teams_dict)
 
+    conn = get_db_connection()
+    manager_details = {}
+    for team_name in teams_dict.keys():
+        details = conn.execute('''
+                 SELECT DISTINCT team_manager,
+                 team_manager_cell
+                 FROM Team WHERE name = ?;
+                 ''', (team_name,)).fetchone()
+        
+        manager_details[team_name] = {
+            'team_manager': details['team_manager'],
+            'team_manager_cell': details['team_manager_cell']
+        }
+    conn.close()
+    print(manager_details)
     return render_template('results.html',
                            title='Results',
                            date=date,
                            team=team,
-                           teams_dict=teams_dict)
+                           teams_dict=teams_dict,
+                           manager_details=manager_details
+                           )
 
 
 @app.errorhandler(404)
@@ -170,10 +188,10 @@ if __name__ == '__main__':
     app.run(debug=True)
 
 # For mobile testing - allows connections from any device on your network
-# if __name__ == '__main__':
+#if __name__ == '__main__':
 #    app.run(
-#      debug=True,
-#      host='0.0.0.0',
-#      port=5000,
-#      threaded=True
-#   )
+#        debug=True,
+#        host='0.0.0.0',
+#        port=5000,
+#        threaded=True
+#    )
