@@ -46,7 +46,7 @@ header h1 {
     text-align: center;
 }
 
-/* Main Content Grid Container */
+/* Main Content */
 main {
     grid-area: main;
     display: grid;
@@ -89,7 +89,7 @@ main {
     line-height: 1.6;
 }
 
-/* Form Grid Layout */
+/* Form Styles */
 .fill-in-form {
     grid-area: form;
     background: #ffffff;
@@ -186,7 +186,7 @@ button:active {
     box-shadow: 0 2px 8px rgba(27, 91, 118, 0.25);
 }
 
-/* Results Page Grid Layout */
+/* Results Page */
 .results {
     background: #ffffff;
     border-radius: 16px;
@@ -207,24 +207,28 @@ button:active {
     grid-area: results-content;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.5rem;
 }
 
-.results h3 {
+.team-group {
+    margin-bottom: 1.5rem;
+}
+
+.team-title {
     color: #133240;
     font-family: 'Montserrat', sans-serif;
     font-size: clamp(1.5rem, 4vw, 2rem);
-    text-align: left;
+    margin-bottom: 0.5rem;
 }
 
-.results h4 {
+.manager-details {
     color: #1b5b76;
     font-family: 'Montserrat', sans-serif;
     font-size: clamp(1rem, 3vw, 1.2rem);
-    text-align: left;
     font-weight: 600;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1rem;
 }
+
 .results ul {
     list-style: none;
     display: grid;
@@ -241,14 +245,7 @@ button:active {
     box-shadow: 0 1px 3px rgba(11, 9, 9, 0.03);
     display: flex;
     justify-content: flex-start;
-    align-items: center;
-}
-
-.results li:hover {
-    transform: translateX(3px);
-    box-shadow: 0 2px 8px rgba(11, 9, 9, 0.08);
-    border-color: #60c1ea;
-    background: #dbf1fa;
+    align-items: flex-start;
 }
 
 .player-info {
@@ -263,9 +260,9 @@ button:active {
     font-size: 1rem;
 }
 
-.team-name {
-    color: #1b5b76;
+.player-grading {
     font-size: 0.9rem;
+    color: #1b5b76;
 }
 
 .results p {
@@ -289,7 +286,7 @@ button:active {
     text-decoration: none;
 }
 
-/* Error Page Grid Layout */
+/* Error Page */
 .error-page {
     display: grid;
     place-items: center;
@@ -332,7 +329,7 @@ button:active {
     cursor: not-allowed;
 }
 
-/* Responsive Grid Adjustments */
+/* Responsive Design */
 @media (max-width: 768px) {
     body {
         grid-template-rows: auto 1fr;

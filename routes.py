@@ -44,21 +44,27 @@ def get_valid_fillins(team_name, date, player):
     if younger_grade:
         # Query both lower divisions and all divisions of next younger grade
         eligible_teams = conn.execute('''
-            SELECT * FROM Team
-            WHERE (grade = ? AND division > ? AND gender = ?)
-            OR (grade = ? AND gender = ?)
-        ''', (str(grade),
-              (div),
-              gender,
-              str(younger_grade),
-              gender)).fetchall()
+                                      SELECT * FROM Team
+                                      WHERE (grade = ?
+                                      AND division > ?
+                                      AND gender = ?)
+                                      OR (grade = ? AND gender = ?)
+                                      ''', (str(grade),
+                                            (div),
+                                            gender,
+                                            str(younger_grade),
+                                            gender)).fetchall()
 
     else:
         # query only lower divisions of same grade
         eligible_teams = conn.execute('''
-            SELECT * FROM Team
-            WHERE grade = ? AND division > ? AND gender = ?
-        ''', (str(grade), str(div), gender)).fetchall()
+                                      SELECT * FROM Team
+                                      WHERE grade = ?
+                                      AND division > ?
+                                      AND gender = ?
+                                      ''', (str(grade),
+                                            str(div),
+                                            gender)).fetchall()
 
     # check if there are any eligible teams and if not return empty list
     if not eligible_teams:
@@ -72,10 +78,10 @@ def get_valid_fillins(team_name, date, player):
             valid_team_names.append(team['name'])
         else:
             player_count = conn.execute('''
-                SELECT COUNT(*)
-                FROM PlayerTeam
-                WHERE team_name = ?
-                ''', (team['name'],)).fetchone()[0]
+                                        SELECT COUNT(*)
+                                        FROM PlayerTeam
+                                        WHERE team_name = ?
+                                        ''', (team['name'],)).fetchone()[0]
             if player_count > 4:
                 valid_team_names.append(team['name'])
 
@@ -87,10 +93,10 @@ def get_valid_fillins(team_name, date, player):
     # get players from valid teams
     placeholders = ','.join('?' for _ in valid_team_names)
     valid_players = conn.execute(f'''
-        SELECT player_name, team_name
-        FROM PlayerTeam
-        WHERE team_name IN ({placeholders})
-    ''', valid_team_names).fetchall()
+                                 SELECT player_name, team_name
+                                 FROM PlayerTeam
+                                 WHERE team_name IN ({placeholders})
+                                 ''', valid_team_names).fetchall()
     conn.close()
     return valid_players
 
@@ -114,10 +120,10 @@ def get_players(team_name):
     # get players from a selected team
     conn = get_db_connection()
     players = conn.execute('''
-        SELECT player_name
-        FROM PlayerTeam
-        WHERE team_name = ?
-    ''', (team_name,)).fetchall()
+                           SELECT player_name
+                           FROM PlayerTeam
+                           WHERE team_name = ?
+                           ''', (team_name,)).fetchall()
     conn.close()
     return jsonify({'players': [p[0] for p in players]})
 
@@ -152,10 +158,10 @@ def results():
     manager_details = {}
     for team_name in teams_dict.keys():
         details = conn.execute('''
-                 SELECT DISTINCT team_manager,
-                 team_manager_cell
-                 FROM Team WHERE name = ?;
-                 ''', (team_name,)).fetchone()
+                               SELECT DISTINCT team_manager,
+                               team_manager_cell
+                               FROM Team WHERE name = ?;
+                               ''', (team_name,)).fetchone()
 
         manager_details[team_name] = {
             'team_manager': details['team_manager'],
@@ -163,12 +169,37 @@ def results():
         }
     conn.close()
 
+    # Get player gradings for all the teams
+    player_gradings = {}
+    conn = get_db_connection()
+    for team_name in teams_dict.keys():
+        for player_name in teams_dict[team_name]:
+            gradings = conn.execute('''
+                                   SELECT singles, doubles
+                                   FROM PlayerTeam
+                                   WHERE player_name = ?;
+                                   ''', (player_name,)).fetchone()
+            # Handle case where player is not found
+            if gradings:
+                player_gradings[player_name] = {
+                    'singles': gradings['singles'],
+                    'doubles': gradings['doubles']
+                }
+            else:
+                # Provide default values/handle missing data
+                player_gradings[player_name] = {
+                    'singles': 'N/A',
+                    'doubles': 'N/A'
+                }
+    conn.close()
+
     return render_template('results.html',
                            title='Results',
                            date=date,
                            team=team,
                            teams_dict=teams_dict,
-                           manager_details=manager_details
+                           manager_details=manager_details,
+                           player_gradings=player_gradings
                            )
 
 

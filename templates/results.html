@@ -12,11 +12,14 @@
                 {% for team_name, players in teams_dict.items() %}
                 <div class="team-group">
                     <h3 class="team-title">{{ team_name }}</h3>
-                    <h4 class="manager-details"> Team Manager: {{ manager_details[team_name].team_manager}} - {{ manager_details[team_name].team_manager_cell }}</h4>
+                    <h4 class="manager-details">Team Manager: {{ manager_details[team_name].team_manager}} - {{ manager_details[team_name].team_manager_cell }}</h4>
                     <ul>
                         {% for player_name in players %}
                         <li>
-                            <span class="player-name">{{ player_name }}</span>
+                            <div class="player-info">
+                                <span class="player-name">{{ player_name }}</span>
+                                <span class="player-grading">Singles: {{ player_gradings[player_name].singles }} <br> Doubles: {{ player_gradings[player_name].doubles }}</span>
+                            </div>
                         </li>
                         {% endfor %}
                     </ul>
