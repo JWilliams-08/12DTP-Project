@@ -45,7 +45,7 @@ def get_valid_fillins(team_name, date, player):
         # Query both lower divisions and all divisions of next younger grade
         eligible_teams = conn.execute('''
             SELECT * FROM Team
-            WHERE (grade = ? AND division < ? AND gender = ?)
+            WHERE (grade = ? AND division > ? AND gender = ?)
             OR (grade = ? AND gender = ?)
         ''', (str(grade),
               (div),
@@ -57,7 +57,7 @@ def get_valid_fillins(team_name, date, player):
         # query only lower divisions of same grade
         eligible_teams = conn.execute('''
             SELECT * FROM Team
-            WHERE grade = ? AND division < ? AND gender = ?
+            WHERE grade = ? AND division > ? AND gender = ?
         ''', (str(grade), str(div), gender)).fetchall()
 
     # check if there are any eligible teams and if not return empty list
@@ -146,8 +146,8 @@ def results():
         if team_name not in teams_dict:
             teams_dict[team_name] = []
         teams_dict[team_name].append(player_name)
-    print(teams_dict)
 
+    # Get manager details for each team
     conn = get_db_connection()
     manager_details = {}
     for team_name in teams_dict.keys():
@@ -156,13 +156,13 @@ def results():
                  team_manager_cell
                  FROM Team WHERE name = ?;
                  ''', (team_name,)).fetchone()
-        
+
         manager_details[team_name] = {
             'team_manager': details['team_manager'],
             'team_manager_cell': details['team_manager_cell']
         }
     conn.close()
-    print(manager_details)
+
     return render_template('results.html',
                            title='Results',
                            date=date,
@@ -186,12 +186,3 @@ def internal_error(error):
 
 if __name__ == '__main__':
     app.run(debug=True)
-
-# For mobile testing - allows connections from any device on your network
-#if __name__ == '__main__':
-#    app.run(
-#        debug=True,
-#        host='0.0.0.0',
-#        port=5000,
-#        threaded=True
-#    )

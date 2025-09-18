@@ -217,6 +217,14 @@ button:active {
     text-align: left;
 }
 
+.results h4 {
+    color: #1b5b76;
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(1rem, 3vw, 1.2rem);
+    text-align: left;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
 .results ul {
     list-style: none;
     display: grid;
