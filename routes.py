@@ -1,7 +1,6 @@
 from flask import Flask, render_template, jsonify, request
 import sqlite3
 
-
 # Create the flask app
 app = Flask(__name__)
 
